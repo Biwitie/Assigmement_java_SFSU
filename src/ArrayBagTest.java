@@ -66,6 +66,7 @@ class ArrayBagTest {
         System.out.println("The bag contains Eggplant: " + myGroceryBag.contains("Eggplant"));
         System.out.println("-------------------");
 
+        myGroceryBag.countVowelsAndConsonants();
         System.out.println("End of the test.");
     }
     @Test
@@ -180,6 +181,25 @@ class ArrayBagTest {
         myGroceryBag.add("Carrot");
         myGroceryBag.add("Date");
         myGroceryBag.add("Eggplant");
+
         assertEquals(4, myGroceryBag.getFrequencyOf("Apple"));
+    }
+
+    @Test
+    void UnionOfTwoBags() {
+        var myGroceryBag = new MyArrayBag<String>();
+        myGroceryBag.add("Apple");
+        myGroceryBag.add("Banana");
+        myGroceryBag.add("Carrot");
+        myGroceryBag.add("Date");
+        myGroceryBag.add("Eggplant");
+        var myOtherGroceryBag = new MyArrayBag<String>();
+        myOtherGroceryBag.add("Lemon");
+        myOtherGroceryBag.add("Mango");
+        myOtherGroceryBag.add("Orange");
+        myOtherGroceryBag.add("Pineapple");
+        myOtherGroceryBag.add("Quince");
+        var myUnionBag = myGroceryBag.union(myOtherGroceryBag);
+        assertEquals(10, myUnionBag.getCurrentSize());
     }
 }

@@ -1,19 +1,23 @@
+import java.lang.reflect.Array;
 import java.util.Arrays;
 
 public class MyArrayBag<T> implements MyArrayBagInterface<T>{
-    private final T[] myBag = toArray();
+    //make a constructor that initializes the bag with 10 nulls
+    private final T[] myBag;
+    public final int MAX_SIZE = 10;
+    private int currentSize = 0;
+
+    @SuppressWarnings("unchecked")
+    public MyArrayBag() {
+        myBag = (T[]) new Object[MAX_SIZE];
+    }
 
     /**
      * @return the current size of the bag
      */
     @Override
     public int getCurrentSize() {
-        int count = 0;
-        for (var entry : myBag){
-            if (entry == null) continue;
-            count++;
-        }
-        return count;
+        return currentSize;
     }
 
     /**
@@ -21,7 +25,7 @@ public class MyArrayBag<T> implements MyArrayBagInterface<T>{
      */
     @Override
     public boolean isFull() {
-        return getCurrentSize() == 10;
+        return currentSize == 10;
     }
 
     /**
@@ -29,7 +33,7 @@ public class MyArrayBag<T> implements MyArrayBagInterface<T>{
      */
     @Override
     public boolean isEmpty() {
-        return getCurrentSize() == 0;
+        return currentSize == 0;
     }
 
     /**
@@ -42,7 +46,8 @@ public class MyArrayBag<T> implements MyArrayBagInterface<T>{
             return false;
         }
         try {
-            myBag[getCurrentSize()] = newEntry;
+            myBag[currentSize] = newEntry;
+            currentSize++;
             return true;
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -59,8 +64,9 @@ public class MyArrayBag<T> implements MyArrayBagInterface<T>{
             return null;
         }
         try {
-            var last = myBag[getCurrentSize()-1];
-            myBag[getCurrentSize() - 1] = null;
+            var last = myBag[currentSize - 1];
+            myBag[currentSize - 1] = null;
+            currentSize--;
             return last;
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -87,7 +93,8 @@ public class MyArrayBag<T> implements MyArrayBagInterface<T>{
         }
         var count = 0;
         for (var entry : myBag) {
-            if (entry == anEntry) {
+            if (entry == null) continue;
+            if (entry.equals(anEntry)) {
                 count++;
             }
         }
@@ -103,8 +110,13 @@ public class MyArrayBag<T> implements MyArrayBagInterface<T>{
         if (isEmpty()){
             return false;
         }
+        //print the bag
+
         for (var entry : myBag){
-            if (entry == anEntry) return true;
+            if (entry == null) continue;
+            if (entry.equals(anEntry)){
+                return true;
+            }
         }
         return false;
     }
@@ -113,8 +125,11 @@ public class MyArrayBag<T> implements MyArrayBagInterface<T>{
      * @return the bag as an array
      */
     @Override
+    @SuppressWarnings("unchecked")
     public T[] toArray() {
-        return (T[]) new Object[10];
+        T[] tmpBag = (T[]) Array.newInstance(myBag.getClass().getComponentType(), getCurrentSize());
+        if (getCurrentSize() >= 0) System.arraycopy(myBag, 0, tmpBag, 0, getCurrentSize());
+        return tmpBag;
     }
 
     public int findAndRemove(T anEntry){
@@ -130,5 +145,64 @@ public class MyArrayBag<T> implements MyArrayBagInterface<T>{
             }
         }
         return count;
+    }
+
+    /**
+     * @param bagEntry is the bag to compare with
+     * @return the union of the 2 bags
+     */
+    @Override
+    public MyArrayBag<T> union(MyArrayBag<T> bagEntry){
+        if (bagEntry == null || bagEntry.isEmpty()){
+            return null;
+        }
+        var unionBag = new MyArrayBag<T>();
+        for (int i = 0; i < currentSize; i++){
+            if (myBag[i] == null) continue;
+            if (unionBag.contains(myBag[i])) continue;
+            unionBag.add(myBag[i]);
+        }
+        for (int i = 0; i < bagEntry.getCurrentSize(); i++){
+            if (bagEntry.myBag[i] == null) continue;
+            if (unionBag.contains(bagEntry.myBag[i])) continue;
+            unionBag.add(bagEntry.myBag[i]);
+        }
+        return unionBag;
+    }
+
+    public void countVowelsAndConsonants(){
+        // Step 1: Create the bags
+        MyArrayBag<String> letters = new MyArrayBag<>();
+        MyArrayBag<String> vowels = new MyArrayBag<>();
+        MyArrayBag<String> consonants = new MyArrayBag<>();
+
+        // Step 2: add 10 random letters to the bag letters with a loop for
+        for (int i = 0; i < 10; i++) {
+            letters.add(String.valueOf((char) (Math.random() * 26 + 'a')));
+        }
+        vowels.add("a");
+        vowels.add("e");
+        vowels.add("i");
+        vowels.add("o");
+        vowels.add("u");
+
+        // Step 3 and 4: Check each letter and add consonants to the consonants bag
+        while (!letters.isEmpty()) {
+            String letter = letters.remove();
+            System.out.println("Letter: " + letter);
+            if (!vowels.contains(letter)) {
+                System.out.println("    Consonant: " + letter);
+                consonants.add(letter);
+            }
+        }
+
+        // Step 5: Print the number of consonants and the frequency of each consonant
+        System.out.println("Number of consonants: " + consonants.currentSize);
+        for (char c = 'a'; c <= 'z'; c++) {
+            String letter = String.valueOf(c);
+            if (consonants.contains(letter)) {
+                System.out.println("Frequency of " + letter + ": " + consonants.getFrequencyOf(letter));
+            }
+        }
     }
 }
