@@ -13,6 +13,7 @@ public class MyArrayBag<T> implements MyArrayBagInterface<T>{
     }
 
     /**
+     * Gets the current number of entries in this bag.
      * @return the current size of the bag
      */
     @Override
@@ -21,14 +22,16 @@ public class MyArrayBag<T> implements MyArrayBagInterface<T>{
     }
 
     /**
+     * Sees whether this bag is full.
      * @return return true if the bag is full, else false
      */
     @Override
     public boolean isFull() {
-        return currentSize == 10;
+        return currentSize == MAX_SIZE;
     }
 
     /**
+     * Sees whether this bag is empty.
      * @return return True if the bag is empty, else false
      */
     @Override
@@ -37,6 +40,7 @@ public class MyArrayBag<T> implements MyArrayBagInterface<T>{
     }
 
     /**
+     * Adds a new entry to this bag.
      * @param newEntry is a simple entry to add in the bag
      * @return true if the entry was correctly added, else false
      */
@@ -56,6 +60,7 @@ public class MyArrayBag<T> implements MyArrayBagInterface<T>{
     }
 
     /**
+     * Removes one unspecified entry from this bag, if possible.
      * @return null if the remove hasn't finished correctly, else the item removed
      */
     @Override
@@ -83,6 +88,7 @@ public class MyArrayBag<T> implements MyArrayBagInterface<T>{
     }
 
     /**
+     * Counts the number of times a given entry appears in this bag.
      * @param anEntry is the thing to search in the bag
      * @return the amount of the item found
      */
@@ -102,6 +108,7 @@ public class MyArrayBag<T> implements MyArrayBagInterface<T>{
     }
 
     /**
+     * Tests whether this bag contains a given entry.
      * @param anEntry is the thing to search in the bag
      * @return true if the item was found at least 1 time, else false
      */
@@ -110,7 +117,6 @@ public class MyArrayBag<T> implements MyArrayBagInterface<T>{
         if (isEmpty()){
             return false;
         }
-        //print the bag
 
         for (var entry : myBag){
             if (entry == null) continue;
@@ -122,6 +128,7 @@ public class MyArrayBag<T> implements MyArrayBagInterface<T>{
     }
 
     /**
+     * Creates an array of all entries that are in this bag.
      * @return the bag as an array
      */
     @Override
@@ -132,6 +139,11 @@ public class MyArrayBag<T> implements MyArrayBagInterface<T>{
         return tmpBag;
     }
 
+    /**
+     * Removes all entries from this bag that match a given entry.
+     * @param anEntry is the item to remove
+     * @return the amount of the item removed
+     */
     public int findAndRemove(T anEntry){
         if (isEmpty()){
             return 0;
@@ -148,6 +160,7 @@ public class MyArrayBag<T> implements MyArrayBagInterface<T>{
     }
 
     /**
+     * Returns a new bag that contains both the entries of the bag and the entries of the bagEntry
      * @param bagEntry is the bag to compare with
      * @return the union of the 2 bags
      */
@@ -170,13 +183,14 @@ public class MyArrayBag<T> implements MyArrayBagInterface<T>{
         return unionBag;
     }
 
+    /**
+     * put in the consonants bag the consonants of the bagEntry and throw the vowels. It will print the frequency of each consonant and the number of consonants.
+     */
     public void countVowelsAndConsonants(){
-        // Step 1: Create the bags
         MyArrayBag<String> letters = new MyArrayBag<>();
         MyArrayBag<String> vowels = new MyArrayBag<>();
         MyArrayBag<String> consonants = new MyArrayBag<>();
 
-        // Step 2: add 10 random letters to the bag letters with a loop for
         for (int i = 0; i < 10; i++) {
             letters.add(String.valueOf((char) (Math.random() * 26 + 'a')));
         }
@@ -186,7 +200,6 @@ public class MyArrayBag<T> implements MyArrayBagInterface<T>{
         vowels.add("o");
         vowels.add("u");
 
-        // Step 3 and 4: Check each letter and add consonants to the consonants bag
         while (!letters.isEmpty()) {
             String letter = letters.remove();
             System.out.println("Letter: " + letter);
@@ -196,7 +209,6 @@ public class MyArrayBag<T> implements MyArrayBagInterface<T>{
             }
         }
 
-        // Step 5: Print the number of consonants and the frequency of each consonant
         System.out.println("Number of consonants: " + consonants.currentSize);
         for (char c = 'a'; c <= 'z'; c++) {
             String letter = String.valueOf(c);
